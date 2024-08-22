@@ -1,0 +1,11 @@
+@Library('jenkins-pipeline-library')
+import com.telenor.hub.jenkins.config.CIPipelineConfig
+
+ciPipeline {
+    config = CIPipelineConfig.get()
+    .useGradle(test: null)
+    .withJdk15()
+	.withImageTarget(image: "platform-tools-dev/nova-springboot-psql-demo-app")
+    .withTaggingStrategiesDefault()
+    .withTaggingStrategySemantic('master', '1.0')
+}

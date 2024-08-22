@@ -1,0 +1,17 @@
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id.startsWith('com.telenor.bss')) {
+                useModule("com.telenor.bss.gradle:${requested.id.id.substring(requested.id.id.lastIndexOf('.') + 1)}:${requested.version}")
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            url 'https://prima.corp.telenor.no/nexus/repository/public/'
+        }
+    }
+}
+
+rootProject.name = 'nova-springboot-psql-demo-app'

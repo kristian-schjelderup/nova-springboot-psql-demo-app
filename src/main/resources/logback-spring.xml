@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProfile name="!local">
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp/>
+                    <!-- https://github.com/logstash/logstash-logback-encoder#loggingevent-patterns -->
+                    <pattern>
+                        <pattern>
+                            {
+                            "message": "%message",
+                            "level": "%level",
+                            "thread": "%thread",
+                            "logClass": "%class{32}",
+                            "logMethod": "%method"
+                            }
+                        </pattern>
+                    </pattern>
+                    <mdc/>
+                    <stackTrace>
+                        <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                            <maxDepthPerThrowable>20</maxDepthPerThrowable>
+                            <maxLength>4096</maxLength>
+                            <shortenedClassNameLength>32</shortenedClassNameLength>
+                            <exclude>sun\.reflect\..*\.invoke.*</exclude>
+                            <exclude>net\.sf\.cglib\.proxy\.MethodProxy\.invoke</exclude>
+                            <rootCauseFirst>true</rootCauseFirst>
+                        </throwableConverter>
+                    </stackTrace>
+                </providers>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="stdout"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="local">
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%date{ISO8601} [%X{Username}] [%X{UUID}] [%X{MESSAGE_REQUEST_ID}] %-5level %logger{48}: %msg [%thread]%n</pattern>
+            </encoder>
+        </appender>
+        <appender name="file" class="ch.qos.logback.core.FileAppender">
+            <file>${APP_LOG_HOME}/application.log</file>
+            <append>true</append>
+            <encoder>
+                <pattern>%date{ISO8601} [%X{Username}] [%X{UUID}] [%X{MESSAGE_REQUEST_ID}] %-5level %logger{48}: %msg [%thread]%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="stdout" />
+            <appender-ref ref="file" />
+        </root>
+    </springProfile>
+</configuration>
